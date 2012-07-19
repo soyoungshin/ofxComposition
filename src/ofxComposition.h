@@ -13,6 +13,7 @@
 #include "ofxVideoWrapper.h"
 #include "ofxOsc.h"
 
+
 // compositions
 typedef ofPtr<ofxVideoWrapper> ofxVideoPtr;
 typedef vector<ofxVideoPtr> videoWrappersVec;
@@ -39,6 +40,7 @@ public:
 	void start();
 	void update();
 	void draw();
+	void drawToFbo(ofFbo* fbo);
 	bool isDone();
 private:
 	// current video list
@@ -51,6 +53,8 @@ private:
 	// epoch time at which this composition started.
 	int compositionStartTime;
 	bool hasStarted;
+
+	ofFbo fbo;
 };
 
 #endif

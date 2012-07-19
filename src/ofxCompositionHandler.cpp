@@ -9,10 +9,6 @@
 
 #include "ofxCompositionHandler.h"
 
-ofxCompositionHandler::ofxCompositionHandler() {
-	// TODO(soyoung): do I need to do anything here?
-}
-
 ofxCompositionHandler::~ofxCompositionHandler() {
 	delete &receiver;
 	flush();
@@ -84,6 +80,12 @@ void ofxCompositionHandler::update() {
 void ofxCompositionHandler::draw() {
 	if(compositions.size() > 0) {
 		compositions.front()->draw();
+	}
+}
+
+void ofxCompositionHandler::drawToFbo(ofFbo* fbo) {
+	if(compositions.size() > 0) {
+		compositions.front()->drawToFbo(fbo);
 	}
 }
 

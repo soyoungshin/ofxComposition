@@ -14,9 +14,7 @@ ofxComposition::~ofxComposition() {
 
 	// delete everything from videoWrappers.
 	videoWrappers.clear();
-	
-	ofSetFrameRate(10);
-	
+
 }
 
 void ofxComposition::addVideo(ofxVideoPtr wrapper) {
@@ -123,8 +121,16 @@ void ofxComposition::draw() {
 				break;
 		}
 		
-		(*(*it)->getVideoPlayer()).draw(x, y, width, height);
+		//(*(*it)->getVideoPlayer()).draw(x, y, width, height);
+		ofPtr<hfGstVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
 	}
+}
+
+void ofxComposition::drawToFbo(ofFbo* fbo) {
+	fbo->begin();
+	ofClear(0,0,0,0);
+	draw();
+	fbo->end();
 }
 
 bool ofxComposition::isDone() {

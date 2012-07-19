@@ -9,12 +9,16 @@
 #ifndef _OFXVIDEOWRAPPER_H
 #define _OFXVIDEOWRAPPER_H
 
-#include "ofVideoPlayer.h"
+#include "hfGstVideoPlayer.h"
+
+typedef ofPtr<hfGstVideoPlayer> VideoPlayerPtr;
+typedef vector<VideoPlayerPtr> VideoPlayers;
 
 // hf == henry facade
+// add positionings as necessary.
 enum e_videoPosition {
-	HF_UPPER_LEFT, 
-	HF_UPPER_RIGHT, 
+	HF_UPPER_LEFT,
+	HF_UPPER_RIGHT,
 	HF_CENTER_LEFT,
 	HF_CENTER_RIGHT,
 	HF_LOWER_LEFT,
@@ -24,7 +28,6 @@ enum e_videoPosition {
 
 using namespace std;
 
-
 class ofxVideoWrapper
 {
 public:
@@ -33,23 +36,22 @@ public:
 	
 	void setup(string path, int screenPosition, int compositionStartTimecode, int compositionEndTimecode,
 			   int clipStartTimecode, int clipDuration, int loopType);
-	ofVideoPlayer* getVideoPlayer();
+	VideoPlayerPtr getVideoPlayer();
 	void setPositionInSeconds(int timecode);
 	void idle();
 	bool isSetup();
 	int getScreenPosition();
-	int getVideoPositionInSeconds();
+	float getVideoPositionInSeconds();
 	int getCompositionStartTimecode();
 	int getCompositionEndTimecode();
 	void play();
 	void stop();
 	void setBirthTime(int birthTime);
 
-
 private:
-	ofVideoPlayer vidPlayer;
+	VideoPlayerPtr vidPlayer;
 	int screenPosition, compositionStartTimecode, compositionEndTimecode, clipStartTimecode, clipDuration, loopType, birthTime;
-	float frameRate;
 	bool bSetup;
 };
+
 #endif

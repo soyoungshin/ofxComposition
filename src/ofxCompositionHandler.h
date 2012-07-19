@@ -19,11 +19,12 @@ typedef vector<ofxCompositionPtr> compositionVec;
 
 class ofxCompositionHandler {
 public:
-	ofxCompositionHandler();
+	ofxCompositionHandler() {};
 	~ofxCompositionHandler();
 	void setup(int port);
 	void update();
 	void draw();
+	void drawToFbo(ofFbo* fbo);
 	void pop(int numToPop);
 	void flush();
 private:
