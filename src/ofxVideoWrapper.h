@@ -9,6 +9,7 @@
 #ifndef _OFXVIDEOWRAPPER_H
 #define _OFXVIDEOWRAPPER_H
 
+#include "hfPosition.h"
 #include "hfGstVideoPlayer.h"
 
 typedef ofPtr<hfGstVideoPlayer> VideoPlayerPtr;
@@ -16,17 +17,9 @@ typedef vector<VideoPlayerPtr> VideoPlayers;
 
 // hf == henry facade
 // add positionings as necessary.
-enum e_videoPosition {
-	HF_UPPER_LEFT,
-	HF_UPPER_RIGHT,
-	HF_CENTER_LEFT,
-	HF_CENTER_RIGHT,
-	HF_LOWER_LEFT,
-	HF_LOWER_RIGHT,
-	HF_FULL_SCREEN
-};
 
-using namespace std;
+
+//using namespace std;
 
 class ofxVideoWrapper
 {
@@ -34,13 +27,13 @@ public:
 	ofxVideoWrapper();
 	~ofxVideoWrapper();
 	
-	void setup(string path, int screenPosition, int compositionStartTimecode, int compositionEndTimecode,
+	void setup(string path, hfPosition_t::videoPosition screenPosition, int compositionStartTimecode, int compositionEndTimecode,
 			   int clipStartTimecode, int clipDuration, int loopType);
 	VideoPlayerPtr getVideoPlayer();
 	void setPositionInSeconds(int timecode);
 	void idle();
 	bool isSetup();
-	int getScreenPosition();
+	hfPosition_t::videoPosition getScreenPosition();
 	float getVideoPositionInSeconds();
 	int getCompositionStartTimecode();
 	int getCompositionEndTimecode();
@@ -50,7 +43,8 @@ public:
 
 private:
 	VideoPlayerPtr vidPlayer;
-	int screenPosition, compositionStartTimecode, compositionEndTimecode, clipStartTimecode, clipDuration, loopType, birthTime;
+	hfPosition_t::videoPosition screenPosition;
+	int compositionStartTimecode, compositionEndTimecode, clipStartTimecode, clipDuration, loopType, birthTime;
 	bool bSetup;
 };
 

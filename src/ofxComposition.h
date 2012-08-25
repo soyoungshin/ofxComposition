@@ -12,11 +12,15 @@
 
 #include "ofxVideoWrapper.h"
 #include "ofxOsc.h"
+#include "ofxTitles.h"
+#include "hfPosition.h"
 
 
 // compositions
 typedef ofPtr<ofxVideoWrapper> ofxVideoPtr;
 typedef vector<ofxVideoPtr> videoWrappersVec;
+
+typedef hfPosition_t::videoPosition videoPosition_t;
 
 class CompareVideoWrappers {
 public:
@@ -41,7 +45,9 @@ public:
 	void update();
 	void draw();
 	void drawToFbo(ofFbo* fbo);
+	void drawSubtitles();
 	bool isDone();
+	void addSubtitles(std::string _text, int _number, int _start_time, int _end_time, int _x, int _y);
 private:
 	// current video list
 	videoWrappersVec videoWrappers;
@@ -54,7 +60,9 @@ private:
 	int compositionStartTime;
 	bool hasStarted;
 
-	ofFbo fbo;
+	//hfTitles titles;
+	ofxTitles titles;
+
 };
 
 #endif

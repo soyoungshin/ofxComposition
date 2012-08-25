@@ -2,6 +2,7 @@
 
 ofxComposition::ofxComposition() {
 	hasStarted = false;
+	titles.loadFont("verdana.ttf", 32);
 }
 
 ofxComposition::~ofxComposition() {
@@ -14,7 +15,8 @@ ofxComposition::~ofxComposition() {
 
 	// delete everything from videoWrappers.
 	videoWrappers.clear();
-
+	titles.stop();
+	titles.clear();
 }
 
 void ofxComposition::addVideo(ofxVideoPtr wrapper) {
@@ -29,6 +31,7 @@ void ofxComposition::start() {
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); ) {
 		(*it)->setBirthTime(currentTime);
 	}
+	titles.play();
 }
 
 void ofxComposition::update() {
@@ -69,12 +72,13 @@ void ofxComposition::update() {
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); it++ ) {
 		(*it)->idle();
 	}	
+
 }
 
 void ofxComposition::draw() {
 	vector<ofxVideoPtr>::iterator it;
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); it++ ) {
-		int position = (*it)->getScreenPosition();
+		videoPosition_t position = (*it)->getScreenPosition();
 		
 
 		
@@ -86,31 +90,61 @@ void ofxComposition::draw() {
 		int height = thirdHeight;
 		
 		switch (position) {
-			case HF_UPPER_LEFT:
+			case hfPosition_t::HF_UPPER_LEFT:
 				x = 0;
 				y = 0;
 				break;
-			case HF_UPPER_RIGHT:
+			case hfPosition_t::HF_UPPER_RIGHT:
 				x = halfWidth;
 				y = 0;
 				break;
-			case HF_CENTER_LEFT:
+			case hfPosition_t::HF_CENTER_LEFT:
 				x = 0;
 				y = thirdHeight;
 				break;
-			case HF_CENTER_RIGHT:
+			case hfPosition_t::HF_CENTER_RIGHT:
 				x = halfWidth;
 				y = thirdHeight;
 				break;
-			case HF_LOWER_LEFT:
+			case hfPosition_t::HF_LOWER_LEFT:
 				x = 0;
 				y = thirdHeight * 2;
 				break;
-			case HF_LOWER_RIGHT:
+			case hfPosition_t::HF_LOWER_RIGHT:
 				x = halfWidth;
 				y = thirdHeight * 2;
 				break;
-			case HF_FULL_SCREEN:
+			case hfPosition_t::HF_UPPER_THIRD:
+				x = 0;
+				y = 0;
+				width = ofGetWindowWidth();
+				height = thirdHeight;
+				break;
+			case hfPosition_t::HF_CENTER_THIRD:
+				x = 0;
+				y = thirdHeight;
+				width = ofGetWindowWidth();
+				height = thirdHeight;
+				break;
+			case hfPosition_t::HF_LOWER_THIRD:
+				x = 0;
+				y = thirdHeight * 2;
+				width = ofGetWindowWidth();
+				height = thirdHeight;
+				break;
+			case hfPosition_t::HF_LEFT_HALF:
+				x = 0;
+				y = 0;
+				width = halfWidth;
+				height = ofGetWindowHeight();
+				break;
+			case hfPosition_t::HF_RIGHT_HALF:
+				x = halfWidth;
+				y = 0;
+				width = halfWidth;
+				height = ofGetWindowHeight();
+				break;		
+			case hfPosition_t::HF_FULL_SCREEN:
 				x = 0;
 				y = 0;
 				width = ofGetWindowWidth();
@@ -133,6 +167,17 @@ void ofxComposition::drawToFbo(ofFbo* fbo) {
 	fbo->end();
 }
 
+void ofxComposition::drawSubtitles() {
+	titles.draw();
+}
+
 bool ofxComposition::isDone() {
 	return videoQueue.size() == 0 && videoWrappers.size() == 0;
+}
+
+
+// in our app, we may or may not bind to the videos. 
+// TODO(soyoung): try to get both working
+void ofxComposition::addSubtitles(std::string _text, int _number, int _start_time, int _end_time, int _x, int _y) {
+	titles.add(_text, _number, _start_time, _end_time, _x, _y);
 }

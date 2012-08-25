@@ -25,6 +25,7 @@ public:
 	void update();
 	void draw();
 	void drawToFbo(ofFbo* fbo);
+	void drawSubtitles();
 	void pop(int numToPop);
 	void flush();
 private:

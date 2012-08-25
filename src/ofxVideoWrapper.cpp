@@ -15,7 +15,7 @@ ofxVideoWrapper::ofxVideoWrapper() {
 ofxVideoWrapper::~ofxVideoWrapper() {
 }
 
-void ofxVideoWrapper::setup(string path, int screenPosition, 
+void ofxVideoWrapper::setup(string path, hfPosition_t::videoPosition screenPosition, 
 	int compositionStartTimecode, int compositionEndTimecode,
 	int clipStartTimecode, int clipDuration, int loopType) {
 
@@ -84,7 +84,7 @@ bool ofxVideoWrapper::isSetup() {
 	return bSetup;
 }
 
-int ofxVideoWrapper::getScreenPosition() {
+hfPosition_t::videoPosition ofxVideoWrapper::getScreenPosition() {
 	return screenPosition;
 }
 
