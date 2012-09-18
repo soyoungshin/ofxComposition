@@ -31,7 +31,10 @@ void ofxComposition::start() {
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); ) {
 		(*it)->setBirthTime(currentTime);
 	}
-	titles.play();
+	// if titles is empty, do nothing
+	if(!titles.empty()) {
+		titles.play();
+	}
 }
 
 void ofxComposition::update() {
@@ -156,7 +159,13 @@ void ofxComposition::draw() {
 		}
 		
 		//(*(*it)->getVideoPlayer()).draw(x, y, width, height);
-		ofPtr<hfGstVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
+//		ofPtr<hfGstVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
+
+
+
+// todo: fix this so we have generic video player swap out too.
+		//ofPtr<ofxGstStandaloneVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
+		VideoPlayerPtr((*it)->getVideoPlayer())->draw(x,y,width, height);
 	}
 }
 
@@ -168,7 +177,9 @@ void ofxComposition::drawToFbo(ofFbo* fbo) {
 }
 
 void ofxComposition::drawSubtitles() {
-	titles.draw();
+	if(!titles.empty()) {
+		titles.draw();
+	}
 }
 
 bool ofxComposition::isDone() {

@@ -9,10 +9,18 @@
 #ifndef _OFXVIDEOWRAPPER_H
 #define _OFXVIDEOWRAPPER_H
 
+#include "ofVideoPlayer.h"
 #include "hfPosition.h"
-#include "hfGstVideoPlayer.h"
+#include "ofxGstStandaloneVideoPlayer.h"
 
-typedef ofPtr<hfGstVideoPlayer> VideoPlayerPtr;
+#ifdef TARGET_WIN32
+typedef ofxGstStandaloneVideoPlayer VideoWrapperPlayer;
+#define USING_GST_PLAYER
+#else
+typedef ofVideoPlayer VideoWrapperPlayer;
+#endif
+
+typedef ofPtr<VideoWrapperPlayer> VideoPlayerPtr;
 typedef vector<VideoPlayerPtr> VideoPlayers;
 
 // hf == henry facade

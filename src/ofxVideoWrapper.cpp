@@ -13,21 +13,28 @@ ofxVideoWrapper::ofxVideoWrapper() {
 }
 
 ofxVideoWrapper::~ofxVideoWrapper() {
+	vidPlayer->stop();
+	vidPlayer->close();
 }
 
 void ofxVideoWrapper::setup(string path, hfPosition_t::videoPosition screenPosition, 
 	int compositionStartTimecode, int compositionEndTimecode,
 	int clipStartTimecode, int clipDuration, int loopType) {
 
-	vidPlayer = ofPtr<hfGstVideoPlayer>(new hfGstVideoPlayer);
+	vidPlayer = VideoPlayerPtr(new VideoWrapperPlayer);
+	
+	std::string file;
+#ifdef USING_GST_PLAYER
 	vidPlayer->setPixelFormat(OF_PIXELS_RGB);
-
-	std::string file = ofFilePath::getAbsolutePath(path, true);
+	file = ofFilePath::getAbsolutePath(path, true);
+	// if using gst player, prepend 'data' to the path. If not, don't.
 	std::replace(file.begin(), file.end(), '\\', '/');
 
 	// prepend the protocol
 	file = "file:///" + file;
-
+#else
+	file = path;
+#endif
 	if(!vidPlayer->loadMovie(file)) {
 		ofLogError("setup", "movie loading failed: \n" + file);
 	}
