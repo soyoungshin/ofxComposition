@@ -7,7 +7,7 @@ ofxComposition::ofxComposition() {
 
 ofxComposition::~ofxComposition() {
 	// TODO(soyoung): figure out what to clean up
-	
+
 	// delete everything from videoQueue
 	while (!videoQueue.empty()) {
 		videoQueue.pop();
@@ -26,30 +26,28 @@ void ofxComposition::addVideo(ofxVideoPtr wrapper) {
 void ofxComposition::start() {
 	int currentTime = time(NULL);
 	compositionStartTime = currentTime;
-	
-	vector<ofxVideoPtr>::iterator it;
-	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); ) {
-		(*it)->setBirthTime(currentTime);
-	}
+
 	// if titles is empty, do nothing
 	if(!titles.empty()) {
 		titles.play();
 	}
+
+    hasStarted = true;
 }
 
 void ofxComposition::update() {
 	if(!hasStarted) {
 		start();
-		hasStarted = true;
 	}
-	
+
 	int currentTime = time(NULL);
 
 	// dequeue current videos from priority queue
 	int compositionElapsed = currentTime - compositionStartTime;
-	
+
 	while(!videoQueue.empty()) {
 		ofxVideoPtr p = videoQueue.top();
+
 		if(p->getCompositionStartTimecode() <= compositionElapsed) {
 			p->play();
 			videoWrappers.push_back(p);
@@ -57,9 +55,8 @@ void ofxComposition::update() {
 		} else {
 			break;
 		}
-		
 	}
-	
+
 	// prune old videos from current-play vector
 	vector<ofxVideoPtr>::iterator it;
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); ) {
@@ -70,28 +67,25 @@ void ofxComposition::update() {
 			it++;
 		}
 	}
-	
+
 	// idle current videos
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); it++ ) {
 		(*it)->idle();
-	}	
-
+	}
 }
 
 void ofxComposition::draw() {
 	vector<ofxVideoPtr>::iterator it;
 	for ( it=videoWrappers.begin() ; it < videoWrappers.end(); it++ ) {
 		videoPosition_t position = (*it)->getScreenPosition();
-		
 
-		
 		int halfWidth = ofGetWindowWidth() / 2;
 		int thirdHeight = ofGetWindowHeight() / 3;
-		
+
 		int x, y;
 		int width = halfWidth;
 		int height = thirdHeight;
-		
+
 		switch (position) {
 			case hfPosition_t::HF_UPPER_LEFT:
 				x = 0;
@@ -146,7 +140,7 @@ void ofxComposition::draw() {
 				y = 0;
 				width = halfWidth;
 				height = ofGetWindowHeight();
-				break;		
+				break;
 			case hfPosition_t::HF_FULL_SCREEN:
 				x = 0;
 				y = 0;
@@ -157,14 +151,7 @@ void ofxComposition::draw() {
 				cout << "osc receive::draw -- unknown video position: " << position << endl;;
 				break;
 		}
-		
-		//(*(*it)->getVideoPlayer()).draw(x, y, width, height);
-//		ofPtr<hfGstVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
 
-
-
-// todo: fix this so we have generic video player swap out too.
-		//ofPtr<ofxGstStandaloneVideoPlayer>((*it)->getVideoPlayer())->draw(x,y,width, height);
 		VideoPlayerPtr((*it)->getVideoPlayer())->draw(x,y,width, height);
 	}
 }
@@ -186,8 +173,7 @@ bool ofxComposition::isDone() {
 	return videoQueue.size() == 0 && videoWrappers.size() == 0;
 }
 
-
-// in our app, we may or may not bind to the videos. 
+// in our app, we may or may not bind to the videos.
 // TODO(soyoung): try to get both working
 void ofxComposition::addSubtitles(std::string _text, int _number, int _start_time, int _end_time, int _x, int _y) {
 	titles.add(_text, _number, _start_time, _end_time, _x, _y);

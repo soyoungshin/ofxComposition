@@ -11,10 +11,12 @@
 
 #include "ofVideoPlayer.h"
 #include "hfPosition.h"
-#include "ofxGstStandaloneVideoPlayer.h"
+
 
 #ifdef TARGET_WIN32
+#include "ofxGstStandaloneVideoPlayer.h"
 typedef ofxGstStandaloneVideoPlayer VideoWrapperPlayer;
+
 #define USING_GST_PLAYER
 #else
 typedef ofVideoPlayer VideoWrapperPlayer;
@@ -34,7 +36,7 @@ class ofxVideoWrapper
 public:
 	ofxVideoWrapper();
 	~ofxVideoWrapper();
-	
+
 	void setup(string path, hfPosition_t::videoPosition screenPosition, int compositionStartTimecode, int compositionEndTimecode,
 			   int clipStartTimecode, int clipDuration, int loopType);
 	VideoPlayerPtr getVideoPlayer();
@@ -47,12 +49,11 @@ public:
 	int getCompositionEndTimecode();
 	void play();
 	void stop();
-	void setBirthTime(int birthTime);
-
 private:
 	VideoPlayerPtr vidPlayer;
 	hfPosition_t::videoPosition screenPosition;
-	int compositionStartTimecode, compositionEndTimecode, clipStartTimecode, clipDuration, loopType, birthTime;
+	int compositionStartTimecode, compositionEndTimecode, clipStartTimecode, clipDuration, loopType;
+
 	bool bSetup;
 };
 
